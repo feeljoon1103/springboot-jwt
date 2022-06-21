@@ -13,10 +13,13 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,10 +31,14 @@ public class UserController {
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @PostMapping("/join")
-    public ResponseEntity join(@RequestBody UserDto userDto) {
+    /*public ResponseEntity join(@RequestBody UserDto userDto) {*/
+    public ResponseEntity join(HttpServletRequest request) {
         ResponseEntity responseEntity = null;
+
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
         try {
-            UserDto savedUser = userService.join(userDto);
+            UserDto savedUser = userService.join(username, password);
             SingleDataResponse<UserDto> response = responseService.getSingleDataResponse(true, "회원가입 성공", savedUser);
 
             responseEntity = ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -45,10 +52,16 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginDto loginDto) {
+    /*public ResponseEntity login(@RequestBody LoginDto loginDto) {*/
+    public ResponseEntity login(HttpServletRequest request) {
         ResponseEntity responseEntity = null;
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+
+        System.out.println("username : " + username);
+        System.out.println(password);
         try {
-            String token = userService.login(loginDto);
+            String token = userService.login(username, password);
 
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.add("Authorization", "Bearer " + token);

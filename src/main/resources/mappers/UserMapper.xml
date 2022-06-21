@@ -10,6 +10,12 @@
         WHERE username = #{username}
     </select>
 
+    <select id="findUserByUsernamepassword" resultType="UserDto">
+        SELECT user_id userId, username, password, role
+        FROM user
+        WHERE username = #{username} AND password = #{password}
+    </select>
+
     <select id="findByUserId" resultType="UserDto">
         SELECT user_id userId, username, PASSWORD, role
         FROM user

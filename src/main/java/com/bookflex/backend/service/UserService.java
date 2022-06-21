@@ -24,22 +24,30 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public UserDto join(UserDto userDto) {
-        if (userMapper.findUserByUsername(userDto.getUsername()).isPresent()) {
+    public UserDto join(String username, String password) {
+    /*public UserDto join(UserDto userDto) {*/
+        /*if (userMapper.findUserByUsername(userDto.getUsername()).isPresent()) {
             throw new DuplicatedUsernameException("이미 가입된 유저입니다");
-        }
+        }*/
 
-        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        UserDto userDto = new UserDto();
+
+        String pass = passwordEncoder.encode(password);
+
+        /*userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));*/
+        userDto.setPassword(pass);
+        userDto.setUsername(username);
         userMapper.save(userDto);
+
+        System.out.println(userMapper.findUserByUsername(userDto.getUsername()).get());
 
         return userMapper.findUserByUsername(userDto.getUsername()).get();
     }
-
-    public String login(LoginDto loginDto) {
-        UserDto userDto = userMapper.findUserByUsername(loginDto.getUsername())
+    public String login(String username, String password) {
+        UserDto userDto = userMapper.findUserByUsername(username)
                 .orElseThrow(() -> new LoginFailedException("잘못된 아이디입니다"));
 
-        if (!passwordEncoder.matches(loginDto.getPassword(), userDto.getPassword())) {
+        if (!passwordEncoder.matches(password, userDto.getPassword())) {
             throw new LoginFailedException("잘못된 비밀번호입니다");
         }
 
