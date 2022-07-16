@@ -23,7 +23,7 @@
     </select>
     
     <insert id="save" parameterType="UserDto">
-        INSERT INTO user (username, password)
-        VALUES ( #{username}, #{password} )
+        INSERT INTO user (username, password, role )
+        VALUES ( #{username}, #{password}, 'USER' )
     </insert>
 </mapper>

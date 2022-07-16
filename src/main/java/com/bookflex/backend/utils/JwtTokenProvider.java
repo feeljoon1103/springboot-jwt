@@ -50,6 +50,17 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    // JWT 토큰 생성
+    public String createRefreshToken(Long userId, List<String> roles) {
+        Date now = new Date();
+
+        return Jwts.builder()
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + tokenValidMillisecond)) // 토큰 만료일 설정
+                .signWith(SignatureAlgorithm.HS256, secretKey) // 암호화
+                .compact();
+    }
+
     // JWT 토큰에서 인증 정보 조회
     public Authentication getAuthentication(String token) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserId(token));

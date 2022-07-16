@@ -25,16 +25,11 @@ public class UserService {
 
     @Transactional
     public UserDto join(String username, String password) {
-    /*public UserDto join(UserDto userDto) {*/
-        /*if (userMapper.findUserByUsername(userDto.getUsername()).isPresent()) {
-            throw new DuplicatedUsernameException("이미 가입된 유저입니다");
-        }*/
 
         UserDto userDto = new UserDto();
 
         String pass = passwordEncoder.encode(password);
 
-        /*userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));*/
         userDto.setPassword(pass);
         userDto.setUsername(username);
         userMapper.save(userDto);
